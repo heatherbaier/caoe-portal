@@ -1,0 +1,239 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- <h1 class="title">
+    Welcome, {{name}}!
+</h1> -->
+
+
+
+<div id="main-page">
+
+    <!-- <h2 style="margin-left: 15px; padding: 10px;">Welcome to the Migration Data Portal, 
+        {{name}}!</h2> -->
+
+    <div class="row">
+
+        <div class="column" id="nav" style="background-color:#EFEFF6;">
+
+            <h5 style="margin-left: 20px; padding: 10px">Adjustable sociodemographic variables:</h5>
+
+            <br>
+
+            <button class="dropdown-btn"><i class="material-icons">people</i><span
+                    style="padding-left: 20px;">Demographic Variables</span><i
+                    class="fa fa-caret-down"></i></button>
+
+            <div class="dropdown-container">
+                {% for demog_var in demog_data %}
+                <input type="number" id="{{ demog_var }}" value="100" style="display: inline;">
+                <label id="label_{{ demog_var }}" style="font-weight: normal; display: inline;">{{ demog_var
+                    }}</label>
+                <i class="material-icons info" id="info_{{ demog_var }}" onclick="var_drilldown(this)"
+                    style="display: inline;">info</i><br><br>
+                {% endfor %}
+            </div>
+
+            <button class="dropdown-btn"><i class="material-icons">pregnant_woman</i><span
+                    style="padding-left: 20px;">Family Unit Variables</span><i
+                    class="fa fa-caret-down"></i></button>
+
+            <div class="dropdown-container">
+                {% for family_var in family_data %}
+                <input type="number" id="{{ family_var }}" value="100" style="display: inline;">
+                <label id="label_{{ family_var }}" style="font-weight: normal; display: inline;">{{ family_var
+                    }}</label>
+                <i class="material-icons info" id="info_{{ family_var }}" onclick="var_drilldown(this)"
+                    style="display: inline;">info</i><br><br>
+                {% endfor %}
+            </div>
+
+            <!-- <button class="dropdown-btn"><i class="material-icons">health_and_safety</i><span
+                    style="padding-left: 20px;">Health Variables</span><i class="fa fa-caret-down"></i></button>
+
+            <div class="dropdown-container">
+                {% for health_var in health_data %}
+                <input type="number" id="{{ health_var }}" value="100" style="display: inline;">
+                <label id="label_{{ health_var }}" style="font-weight: normal; display: inline;">{{ health_var
+                    }}</label>
+                <i class="material-icons info" id="info_{{ health_var }}" onclick="var_drilldown(this)"
+                    style="display: inline;">info</i><br><br>
+                {% endfor %}
+            </div> -->
+
+            <button class="dropdown-btn"><i class="material-icons">meeting_room</i><span
+                    style="padding-left: 20px;">Occupational Variables</span><i
+                    class="fa fa-caret-down"></i></button>
+
+            <div class="dropdown-container">
+                {% for employ_var in employ_data %}
+                <input type="number" id="{{ employ_var }}" value="100" style="display: inline;">
+                <label id="label_{{ employ_var }}" style="font-weight: normal; display: inline;">{{ employ_var
+                    }}</label>
+                <i class="material-icons info" id="info_{{ employ_var }}" onclick="var_drilldown(this)"
+                    style="display: inline;">info</i><br><br>
+                {% endfor %}
+            </div>
+
+            <button class="dropdown-btn"><i class="material-icons">local_library</i><span
+                    style="padding-left: 20px;">Education Variables</span><i
+                    class="fa fa-caret-down"></i></button>
+
+            <div class="dropdown-container">
+                {% for edu_var in edu_data %}
+                <input type="number" id="{{ edu_var }}" value="100" style="display: inline;">
+                <label id="label_{{ edu_var }}" style="font-weight: normal; display: inline;">{{ edu_var
+                    }}</label>
+                <i class="material-icons info" id="info_{{ edu_var }}" onclick="var_drilldown(this)"
+                    style="display: inline;">info</i><br><br>
+                {% endfor %}
+            </div>
+
+            <button class="dropdown-btn"><i class="material-icons">home</i><span
+                    style="padding-left: 20px;">Household Variables</span><i
+                    class="fa fa-caret-down"></i></button>
+
+            <div class="dropdown-container">
+                {% for hhold_var in hhold_data %}
+                <input type="number" id="{{ hhold_var }}" value="100" style="display: inline;">
+                <label id="label_{{ hhold_var }}" style="font-weight: normal; display: inline;">{{ hhold_var
+                    }}</label>
+                <i class="material-icons info" id="info_{{ hhold_var }}" onclick="var_drilldown(this)"
+                    style="display: inline;">info</i><br><br>
+                {% endfor %}
+            </div>
+
+            <button class="dropdown-btn"><i class="material-icons">home</i><span
+                    style="padding-left: 20px;">Crime Variables</span><i class="fa fa-caret-down"></i></button>
+
+            <div class="dropdown-container">
+                {% for crime_var in crime_data %}
+                <input type="number" id="{{ crime_var }}" value="100" style="display: inline;">
+                <label id="label_{{ crime_var }}" style="font-weight: normal; display: inline;">{{ crime_var
+                    }}</label>
+                <i class="material-icons info" id="info_{{ crime_var }}" onclick="var_drilldown(this)"
+                    style="display: inline;">info</i><br><br>
+                {% endfor %}
+            </div>
+
+            <br><br>
+
+            <div id='pb-div'><button class="predict-button" id='submit' onclick="predict_migration()">Predict
+                    new migration pattern</button></div>
+
+        </div>
+
+        <div class="column" id="data" style="height: 100%">
+
+            <div id="grid-container" class="grid-container" style="height: 20%">
+
+                <div class="grid-item">
+                    <h2 id="total_migrants" class='top-stat'>{{ month6_migs }}</h2>
+                    <br>
+                    <h4 style="text-align: center;">Number of migrants within 6 months</h4>
+                </div>
+
+                <div class="grid-item">
+                    <h2 id="avg_age" class='top-stat'>{{ month12_migs }}</h2>
+                    <br>
+                    <h4>Number of migrants within 1 year</h4>
+                </div>
+
+                <div id="change_migrants" class="grid-item" style="display:none;">
+                    <div style="width: 100%; display: inline;">
+                        <h6 id="change_migrants_t" class="top-stat">0</h6>
+                        <i id='pchange_icon' class="material-icons"></i>
+                        <h6 id="p_change_migrants_t" class="top-stat">0</h6>
+                    </div>
+                    <br>
+                    <h4>Change in number of migrants within 6 months</h4>
+                </div>
+
+                <div id="avg_age_change" class="grid-item" style="display:none;">
+                    <h6 class="top-stat" id="avg_age_change_t">0</h6>
+                    <i id='page_change_icon' class="material-icons"></i>
+                    <h6 id="pavg_age_change_t" class="top-stat">0</h6>
+                    <br>
+                    <h4>Change in number of migrants within 1 year</h4>
+                </div>
+
+
+                <!-- <div  class="grid-item box"  id="mapid"  style="height: 80%"></div> -->
+
+
+            </div>
+
+            <!-- <div class="stack-top" id='radio-layers'>
+                <input type="radio" id="sum_num_intmig_button" name="map_layers" value="sum_num_intmig"
+                    onclick="change_map_var('sum_num_intmig')">
+                <label for="sum_num_intmig_button">Absolute number of migrants</label><br>
+                <input type="radio" id="perc_migrants_button" name="map_layers" value="perc_migrants"
+                    checked="checked" onclick="change_map_var('perc_migrants')">
+                <label for="perc_migrants_button">Migrants as a % of population</label><br>
+                <input style="display: none;" type="radio" id="absolute_change_button" name="map_layers"
+                    value="absolute_change" onclick="change_map_var('absolute_change')">
+                <label style="display: none;" for="absolute_change_button" id="absolute_change_label">Absolute
+                    change in migrants</label><br>
+                <input style="display: none;" type="radio" id="perc_change_button" name="map_layers"
+                    value="perc_change" onclick="change_map_var('perc_change')">
+                <label style="display: none;" for="perc_change_button" id="perc_change_label">% change in
+                    migrants</label>
+            </div> -->
+
+
+            <div class="map-wrapper">
+                <div class="box" id="mapid"></div>
+            </div>
+
+        </div>
+
+        <div class="column" id="drill" style="display: none; width: 25%;">
+
+            <h2 id='drill-muni'></h2>
+            <br><br>
+            <h5 style="display:none;" id="fi-title">Feature Importance</h5>
+            <hr>
+            <h3 id="mig_perc"></h3>
+            <br><br><br><br>
+            <h5 style="display:none;" id="ale-title">Effect on Migration Prediction</h5>
+
+            <div class="popup" onclick="myFunction()">How to interpret Effect
+                <span class="popuptext" id="myPopup">A Simple Popup!</span>
+            </div>
+
+            <hr>
+            <div id="dd-plot1"></div>
+            <br><br>
+            <h4 id="ale-exp-title"></h4>
+            <h4 id="ale-exp-text"></h4>
+
+        </div>
+
+    </div>
+
+
+
+    <script src="{{url_for('static', filename='js/var-drilldown.js')}}"></script>
+    <script src="{{url_for('static', filename='js/migration-map.js')}}"></script>
+    <script src="{{url_for('static', filename='js/dropdown.js')}}"></script>
+    <script src="{{url_for('static', filename='js/time-slider.js')}}"></script>
+
+    <script>
+
+        // When the user clicks on div, open the popup
+        function myFunction() {
+            var popup = document.getElementById("myPopup");
+            popup.classList.toggle("show");
+        }
+
+    </script>
+
+
+
+
+
+
+
+</div>
+
+{% endblock %}
