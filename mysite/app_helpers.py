@@ -132,11 +132,11 @@ def prep_dataframes(dta, request, selected_municipalities):
     # Subset the data of the selected munis from the data frame &         #
     # grab the variables used in the census model                         #
     #######################################################################
-    with open("./us_vars.txt", "r") as f:
-        vars = f.read().splitlines()
-    vars = [i.strip('"",') for i in vars]
-    vars = [i for i in vars if i in dta.columns] + ['muni_id']
-    print(vars)
+    # with open("./us_vars.txt", "r") as f:
+    #     vars = f.read().splitlines()
+    # vars = [i.strip('"",') for i in vars]
+    # vars = [i for i in vars if i in dta.columns] + ['muni_id']
+    # print(vars)
 
     dta_selected = dta[dta['muni_id'].isin([int(i) for i in selected_municipalities])]
     dta_dropped = dta[~dta['muni_id'].isin([int(i) for i in selected_municipalities])]
