@@ -55,6 +55,7 @@ MODEL_PATH = "./trained_model/model_epoch979.torch"
 # BAD_IDS = ["105", "115", "122", "126", "147", "153", "1622", "1684", "2027", "2043", "104", "1630", "113", "640", "400", "1631", "2054", "1693", "152", "1608"]
 MODEL_ERROR = 0.024487821
 
+
 gdf = gpd.read_file(SHP_PATH)
 gdf = gdf.dropna(subset = ["geometry"])
 # graph_id_dict = dict(zip(gdf["shapeID"].to_list(), [str(i) for i in range(0, len(gdf))]))
@@ -69,7 +70,7 @@ with open(GEOJSON_PATH) as f:
 model = LSTM_CPU(input_size = 586,
                 hidden_size = 32,
                 output_size = 1)
-state_dict = torch.load(MODEL_PATH)["model_state_dict"]
+state_dict = torch.load(MODEL_PATH, map_location = torch.device('cpu'))["model_state_dict"]
 weights = load_ddp_state(state_dict)
 model.load_state_dict(weights)
 
