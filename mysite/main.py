@@ -234,11 +234,19 @@ def predict_migration():
     # that to all of the data in dta_dropped that wan't selected to       #
     # create a full dataframe with everything                             #
     #######################################################################
-    dta_selected = dta_selected[['muni_id', 'migrants']].drop_duplicates(subset = ['muni_id'])
+
+    mig12_months_selected = mig12_months[mig12_months['muni_id'].isin([int(i) for i in selected_municipalities])]
+    mig12_months_nselected = mig12_months[~mig12_months['muni_id'].isin([int(i) for i in selected_municipalities])]
+
+    print(mig12_months_selected)
+
+    dta_selected = mig12_months_selected.rename(columns = {"serial": "migrants"})
     dta_selected['migrants'] = predictions
-    dta_final = dta_selected.append(dta_dropped)
+    dta_final = dta_selected.append(mig12_months_nselected.rename(columns = {"serial": "migrants"}))
     print("ALL DATA SHAPE: ", dta_final.shape)
     print("DTA FINAL HEAD: ", dta_final.head())
+
+    print(dta_final)
 
     #######################################################################
     # Normalize the geoJSON as a pandas dataframe and merge in the new    #
