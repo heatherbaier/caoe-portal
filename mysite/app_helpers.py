@@ -19,7 +19,13 @@ import os
 # from model.utils import *
 # from model.aggregator import *
 # from model.encoder import *
-# from model.graphsage import *
+
+
+from lstm_config import get_config
+config, _ = get_config()
+
+from lstm_utils import *
+from lstm import *
 
 
 print("WORKING DIRECTORY: ", os.getcwd())
@@ -59,6 +65,13 @@ munis_available = gdf["shapeID"].to_list()
 with open(GEOJSON_PATH) as f:
     geodata_collection = geojson.load(f)
 
+
+model = LSTM_CPU(input_size = 586,
+                hidden_size = 32,
+                output_size = 1)
+state_dict = torch.load(MODEL_PATH)["model_state_dict"]
+weights = load_ddp_state(state_dict)
+model.load_state_dict(weights)
 
 # def predict(graph, selected_muni_ref_dict, new_census_vals, selected_municipalities):
 
@@ -112,17 +125,22 @@ def prep_dataframes(dta, request, selected_municipalities):
     user-edited changes and the interconnectedness changes
     """
 
+    print(dta.head())
+
     #######################################################################
     # Subset the data of the selected munis from the data frame &         #
     # grab the variables used in the census model                         #
     #######################################################################
     with open("./us_vars.txt", "r") as f:
         vars = f.read().splitlines()
-    vars = [i for i in vars if i in dta.columns] + ['GEO2_MX']
-    dta_selected = dta[dta['GEO2_MX'].isin([int(i) for i in selected_municipalities])]
-    dta_dropped = dta[~dta['GEO2_MX'].isin([int(i) for i in selected_municipalities])]
+    vars = [i.strip('"",') for i in vars]
+    vars = [i for i in vars if i in dta.columns] + ['muni_id']
+    print(vars)
 
-    dta_selected, dta_dropped = dta_selected[vars], dta_dropped[vars]
+    dta_selected = dta[dta['muni_id'].isin([int(i) for i in selected_municipalities])]
+    dta_dropped = dta[~dta['muni_id'].isin([int(i) for i in selected_municipalities])]
+
+    # dta_selected, dta_dropped = dta_selected[vars], dta_dropped[vars]
     dta_selected, dta_dropped = dta_selected.fillna(0), dta_dropped.fillna(0)
 
     #######################################################################
@@ -130,9 +148,9 @@ def prep_dataframes(dta, request, selected_municipalities):
     #######################################################################
     print("DTA HEAD", dta_selected.head())
     print("DTA HEAD", dta_selected.shape)
-    X = dta[vars].drop(["sum_num_intmig", "GEO2_MX"], axis = 1).values
-    mMScale = preprocessing.MinMaxScaler()
-    scaler = mMScale.fit(X)
+    # X = dta[vars].drop(["sum_num_intmig", "GEO2_MX"], axis = 1).values
+    # mMScale = preprocessing.MinMaxScaler()
+    # scaler = mMScale.fit(X)
 
     #######################################################################
     # Parse the edited input variables and conver them to percent format  #
@@ -166,18 +184,18 @@ def prep_dataframes(dta, request, selected_municipalities):
     #######################################################################
     edited_variables = [column_names[i] for i in range(0, len(column_names)) if percent_changes[i] != 1.0]
     edited_p_changes = [percent_changes[i] for i in range(0, len(column_names)) if percent_changes[i] != 1.0]
-    corr_table = pd.read_csv(CORR_TABLE_PATH)
-    corr_table = corr_table[corr_table['index'].isin(edited_variables)]
-    corr_table = corr_table.set_index(['index']).reindex(edited_variables)#.reset_index()
-    corr_dict = dict(corr_table.multiply(edited_p_changes, axis='rows').mean())
-    print("EDITED VARIABLES & CHANGES: ", edited_variables, edited_p_changes)
-    print(corr_dict)
+    # corr_table = pd.read_csv(CORR_TABLE_PATH)
+    # corr_table = corr_table[corr_table['index'].isin(edited_variables)]
+    # corr_table = corr_table.set_index(['index']).reindex(edited_variables)#.reset_index()
+    # corr_dict = dict(corr_table.multiply(edited_p_changes, axis='rows').mean())
+    # print("EDITED VARIABLES & CHANGES: ", edited_variables, edited_p_changes)
+    # print(corr_dict)
 
-    for var in range(0, len(edited_variables)):
-        del corr_dict[edited_variables[var]]# = edited_p_changes[var]
+    # for var in range(0, len(edited_variables)):
+    #     del corr_dict[edited_variables[var]]# = edited_p_changes[var]
 
-    with open("./correlations.json", "w") as f:
-        json.dump(corr_dict, f)
+    # with open("./correlations.json", "w") as f:
+    #     json.dump(corr_dict, f)
 
     #######################################################################
     # For each of the columns, If it's in the list of edited variables,   #
@@ -199,14 +217,16 @@ def prep_dataframes(dta, request, selected_municipalities):
 
     dta_selected = dta_selected.fillna(0)
 
+    print(dta_selected)
+
     #######################################################################
     # Scale the selected data to the origianl scale from above            # 
     #######################################################################
-    X = dta_selected.drop(["sum_num_intmig", "GEO2_MX"], axis = 1).values
-    X = scaler.transform(X)
-    print("X SHAPE: ", X.shape)
+    # X = dta_selected.drop(["sum_num_intmig", "GEO2_MX"], axis = 1).values
+    # X = scaler.transform(X)
+    # print("X SHAPE: ", X.shape)
 
-    return dta_selected, dta_dropped, X
+    return dta_selected, dta_dropped
 
 
 # # Read in spatial data

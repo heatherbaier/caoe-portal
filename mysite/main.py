@@ -4,7 +4,6 @@
 from flask import Blueprint, render_template, flash
 from flask_login import login_required, current_user
 from __init__ import create_app, db
-
 import datetime
 
 # [START gae_python38_auth_verify_token]
@@ -12,6 +11,7 @@ import datetime
 from flask import Flask, render_template, request
 
 import pandas as pd
+import torch
 import json
 import os
 
@@ -153,6 +153,8 @@ def predict_migration():
     with open('status.json', 'w') as outfile:
         json.dump({'status': "Status - Starting predictions."}, outfile)
 
+    mig12_months = pd.read_csv(MONTH12_PATH)
+
     # Parse the selected municipalities and get their unique B ID's
     selected_municipalities = request.json['selected_municipalities']
 
@@ -180,42 +182,60 @@ def predict_migration():
 
     print(dta.head())
 
+    dta_selected, dta_dropped = prep_dataframes(dta, request, selected_municipalities)
+
+    predictions = []
     for muni in selected_municipalities:
 
-        cur_dta = dta[dta["muni_id"] == int(muni)].fillna(0)
-        cur_dta = np.array(dta.drop(["muni_id", "year", "month", "migrants"], axis = 1).values, dtype = np.float32)
+        cur_dta = dta_selected[dta_selected["muni_id"] == int(muni)].fillna(0)
+        cur_dta = np.array(cur_dta.drop(["muni_id", "year", "month", "migrants"], axis = 1).values, dtype = np.float32)
         cur_dta[cur_dta != cur_dta] = 0
-        print(cur_dta)
+        cur_dta = torch.tensor(cur_dta)
 
-    # dta_selected, dta_dropped, muns_to_pred = prep_dataframes(dta, request, selected_municipalities)
+        if cur_dta.shape[0] == 12:
 
-    #######################################################################
-    # Create some sort of dictionary with references to the graph_id_dict # 
-    #######################################################################
-    selected_muni_ref_dict = {}
-    for muni in selected_municipalities:
-        muni_ref = graph_id_dict[muni]
-        selected_muni_ref_dict[muni] = muni_ref
+            print("WOULD PREDICT HERE")
 
-    #######################################################################
-    # Create a dictionary with graph_id_dict                              #
-    # references mapped to the new census data                            #
-    #######################################################################
-    new_census_vals = {}
-    for sm in range(0, len(selected_municipalities)):
-        new_census_vals[selected_muni_ref_dict[selected_municipalities[sm]]] = muns_to_pred[sm]
+            predictions.append(model(cur_dta).item())
+
+        else:
+
+            # mig_12months = pd.read_csv(MONTH12_PATH)
+            predictions.append(mig12_months[mig12_months["muni_id"] == int(muni)]["serial"].values[0])
+
+            print("mig_12months: ", mig12_months)
+
+        print(cur_dta.shape)
+
+
+    # #######################################################################
+    # # Create some sort of dictionary with references to the graph_id_dict # 
+    # #######################################################################
+    # selected_muni_ref_dict = {}
+    # for muni in selected_municipalities:
+    #     muni_ref = graph_id_dict[muni]
+    #     selected_muni_ref_dict[muni] = muni_ref
+
+    # #######################################################################
+    # # Create a dictionary with graph_id_dict                              #
+    # # references mapped to the new census data                            #
+    # #######################################################################
+    # new_census_vals = {}
+    # for sm in range(0, len(selected_municipalities)):
+    #     new_census_vals[selected_muni_ref_dict[selected_municipalities[sm]]] = muns_to_pred[sm]
 
     #######################################################################
     # Predict the new data                                                # 
     #######################################################################
-    predictions = predict(graph, selected_muni_ref_dict, new_census_vals, selected_municipalities)
+    # predictions = predict(graph, selected_muni_ref_dict, new_census_vals, selected_municipalities)
 
     #######################################################################
     # Update the new predictions in the dta_selected dataframe and append #
     # that to all of the data in dta_dropped that wan't selected to       #
     # create a full dataframe with everything                             #
     #######################################################################
-    dta_selected['sum_num_intmig'] = predictions
+    dta_selected = dta_selected[['muni_id', 'migrants']].drop_duplicates(subset = ['muni_id'])
+    dta_selected['migrants'] = predictions
     dta_final = dta_selected.append(dta_dropped)
     print("ALL DATA SHAPE: ", dta_final.shape)
     print("DTA FINAL HEAD: ", dta_final.head())
@@ -224,42 +244,42 @@ def predict_migration():
     # Normalize the geoJSON as a pandas dataframe and merge in the new    #
     # census & migration data                                             #
     #######################################################################
-    dta_final['GEO2_MX'] = dta_final['GEO2_MX'].astype(str)
-    dta_final[['GEO2_MX', 'sum_num_intmig']].to_csv("./map_layers/sum_num_intmig.csv", index = False)
+    dta_final['muni_id'] = dta_final['muni_id'].astype(str)
+    dta_final[['muni_id', 'migrants']].to_csv("./map_layers/sum_num_intmig.csv", index = False)
     geoDF = json_normalize(geodata_collection["features"])
-    merged = pd.merge(geoDF, dta_final, left_on = "properties.shapeID", right_on = "GEO2_MX")
-    merged['sum_num_intmig'] = merged['sum_num_intmig'].fillna(0)
-    merged['perc_migrants'] = merged['sum_num_intmig'] / merged['total_pop']
+    merged = pd.merge(geoDF, dta_final, left_on = "properties.shapeID", right_on = "muni_id")
+    merged['migrants'] = merged['migrants'].fillna(0)
+    # merged['perc_migrants'] = merged['migrants'] / merged['total_pop']
 
-    dta_final['perc_migrants'] = dta_final['sum_num_intmig'] / dta_final['total_pop']
-    dta_final[['GEO2_MX', 'perc_migrants']].to_csv("./map_layers/perc_migrants.csv", index = False)
+    # dta_final['perc_migrants'] = dta_final['migrants'] / dta_final['total_pop']
+    # dta_final[['muni_id', 'perc_migrants']].to_csv("./map_layers/perc_migrants.csv", index = False)
 
-    og_df = pd.read_csv(DATA_PATH)
-    og_df = og_df[['GEO2_MX', 'sum_num_intmig', 'total_pop']].rename(columns = {'sum_num_intmig': 'sum_num_intmig_og'})
-    og_df['GEO2_MX'] = og_df['GEO2_MX'].astype(str)
-    change_df = pd.merge(og_df, dta_final[['GEO2_MX', 'sum_num_intmig']])
-    change_df['absolute_change'] = change_df['sum_num_intmig'] - change_df['sum_num_intmig_og']
-    change_df[['GEO2_MX', 'absolute_change']].to_csv("./map_layers/absolute_change.csv", index = False)
-    change_df['perc_change'] = (change_df['sum_num_intmig'] - change_df['sum_num_intmig_og']) / change_df['sum_num_intmig_og']
-    change_df = change_df.replace([np.inf, -np.inf], np.nan)
-    change_df = change_df.fillna(0)
-    change_df[['GEO2_MX', 'perc_change']].to_csv("./map_layers/perc_change.csv", index = False)
+    og_df = pd.read_csv(MONTH12_PATH)
+    og_df = og_df[['muni_id', 'serial']].rename(columns = {'serial': 'migrants_og'})
+    og_df['muni_id'] = og_df['muni_id'].astype(str)
+    change_df = pd.merge(og_df, dta_final[['muni_id', 'migrants']])
+    change_df['absolute_change'] = change_df['migrants'] - change_df['migrants_og']
+    change_df[['muni_id', 'absolute_change']].to_csv("./map_layers/absolute_change.csv", index = False)
+    # change_df['perc_change'] = (change_df['migrants'] - change_df['migrants_og']) / change_df['sum_num_intmig_og']
+    # change_df = change_df.replace([np.inf, -np.inf], np.nan)
+    # change_df = change_df.fillna(0)
+    # change_df[['muni_id', 'perc_change']].to_csv("./map_layers/perc_change.csv", index = False)
 
     #######################################################################
     # Aggregate statistics and send to a JSON                             #
     #######################################################################
 
-    total_pred_migrants = merged['sum_num_intmig'].sum()
-    merged['avg_age_weight'] = merged['avg_age'] * merged['sum_num_intmig']
-    avg_age = merged['avg_age_weight'].sum() / merged['sum_num_intmig'].sum()
-    migration_statistics = {'avg_age': avg_age, "total_pred_migrants": float(total_pred_migrants)}
-    with open('predicted_migrants.json', 'w') as outfile:
-        json.dump(migration_statistics, outfile)
+    # total_pred_migrants = merged['sum_num_intmig'].sum()
+    # merged['avg_age_weight'] = merged['avg_age'] * merged['sum_num_intmig']
+    # avg_age = merged['avg_age_weight'].sum() / merged['sum_num_intmig'].sum()
+    # migration_statistics = {'avg_age': avg_age, "total_pred_migrants": float(total_pred_migrants)}
+    # with open('predicted_migrants.json', 'w') as outfile:
+    #     json.dump(migration_statistics, outfile)
 
     #######################################################################
     # Convert features to a gejson for rendering in Leaflet               #
     #######################################################################
-    features = convert_features_to_geojson(merged, column = 'perc_migrants')
+    features = convert_features_to_geojson(merged, column = 'migrants')
 
     with open('status.json', 'w') as outfile:
         json.dump({'status': "Status - Rendering new migration map..."}, outfile)
