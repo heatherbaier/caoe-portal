@@ -18,6 +18,9 @@ import os
 from app_helpers import *
 
 
+lstm_layer = torch.nn.LSTM(586, 128)
+
+
 ########################################################################################
 # our main blueprint
 main = Blueprint('main', __name__)
@@ -192,9 +195,14 @@ def predict_migration():
         cur_dta[cur_dta != cur_dta] = 0
         cur_dta = torch.tensor(cur_dta)
 
+
+
         if cur_dta.shape[0] == 12:
 
             print("WOULD PREDICT HERE")
+
+
+            print("LSTM: ", lstm_layer(cur_dta.view(len(cur_dta),1,-1)))
 
             predictions.append(model(cur_dta).item())
 
