@@ -86,7 +86,7 @@ def profile():
                             employ_data = employ,
                             hhold_data = hhold,
                             crime_data = crime,
-                            month6_migs = int(mig_6months["serial"].sum()),
+                            month6_migs = int(mig_12months["serial"].sum()),
                             month12_migs = int(mig_12months["serial"].sum()))
 
 
