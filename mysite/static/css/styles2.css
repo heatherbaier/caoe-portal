@@ -63,6 +63,7 @@ html, body {
     padding: 10px;
     /* box-shadow: 0 0 10px 5px lightgray; */
     height: 80%;
+    width: 125vh;
   }
   
   .grid-item {
@@ -260,7 +261,7 @@ canvas {
 #mapid { 
     /* position: absolute; */
     /* height: 50%; */
-    width: 136vh;
+    width: 124vh;
     height: 65vh; 
     background-color: #d4dadc;
 }

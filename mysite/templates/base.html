@@ -5,9 +5,7 @@
     <!-- <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1"> -->
-    <title>Flask Auth Example</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css" />
-
 
 	<title>Migration Data Portal</title>
 
@@ -50,11 +48,23 @@
 <body>
 <section class="hero is-fullheight" style="background-color:#EFEFF6;">
 
-    <div class="hero-head">
-        <nav class="navbar">
-            <div class="container">
+    <!-- <div class="hero-head"> -->
 
-                <div id="navbarMenuHeroA" class="navbar-menu">
+        <!-- <nav class="navbar"> -->
+
+
+
+
+            <div style="margin-left: 0px; margin-right: 0px;  width:100%">
+
+
+                <div style="float: left; margin-top: 20px; margin-left: 20px;">
+                    {% if current_user.is_authenticated %}
+                    <h2>Welcome to the Migration Data Portal, {{ current_user.name }}!</h2>
+                    {% endif %}
+                </div>
+
+                <div id="navbarMenuHeroA" class="navbar-menu" style="float: right; margin-left: auto; margin-right: 20px;">
                     <div class="navbar-end">
                         <a href="{{ url_for('main.index') }}" class="navbar-item">
                             Home
@@ -80,8 +90,10 @@
                     </div>
                 </div>
             </div>
-        </nav>
-    </div>
+
+
+        <!-- </nav> -->
+    <!-- </div> -->
 
     <div class="hero-body">
         <!-- <div class="container has-text-centered"> -->
