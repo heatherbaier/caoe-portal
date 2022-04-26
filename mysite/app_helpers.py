@@ -24,6 +24,8 @@ import os
 
 print("WORKING DIRECTORY: ", os.getcwd())
 
+# BASE_DIR = "./"
+# BASE_DIR = "/home/caoemig/mysite"
 
 
 # Path variables

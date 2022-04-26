@@ -37,7 +37,7 @@ def profile():
     # Read in census and migration data
     df = pd.read_csv(DATA_PATH)
 
-    mig_6months = pd.read_csv(MONTH6_PATH)
+    # mig_6months = pd.read_csv(MONTH6_PATH)
     mig_12months = pd.read_csv(MONTH12_PATH)
 
     # print(df.head())
