@@ -13,6 +13,7 @@ from flask import Flask, render_template, request
 
 import pandas as pd
 import json
+import os
 
 from app_helpers import *
 
@@ -28,6 +29,9 @@ def index():
 @main.route('/profile') # profile page that return 'profile'
 @login_required
 def profile():
+
+
+    print("WORKING DIRECTORY: ", os.getcwd())
 
 
     # Read in census and migration data

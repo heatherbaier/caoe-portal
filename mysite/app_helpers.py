@@ -13,11 +13,17 @@ import geojson
 import flask
 import json
 import io
+import os
+
 
 # from model.utils import *
 # from model.aggregator import *
 # from model.encoder import *
 # from model.graphsage import *
+
+
+print("WORKING DIRECTORY: ", os.getcwd())
+
 
 
 # Path variables
