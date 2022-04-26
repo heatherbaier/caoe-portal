@@ -253,7 +253,8 @@ def predict_migration():
     # census & migration data                                             #
     #######################################################################
     dta_final['muni_id'] = dta_final['muni_id'].astype(str)
-    dta_final[['muni_id', 'migrants']].to_csv("./map_layers/sum_num_intmig.csv", index = False)
+    dta_final[['muni_id', 'migrants']].to_csv(f"./map_layers/{current_user.name}_sum_num_intmig.csv", index = False)
+
     geoDF = json_normalize(geodata_collection["features"])
     merged = pd.merge(geoDF, dta_final, left_on = "properties.shapeID", right_on = "muni_id")
     merged['migrants'] = merged['migrants'].fillna(0)
@@ -267,7 +268,7 @@ def predict_migration():
     og_df['muni_id'] = og_df['muni_id'].astype(str)
     change_df = pd.merge(og_df, dta_final[['muni_id', 'migrants']])
     change_df['absolute_change'] = change_df['migrants'] - change_df['migrants_og']
-    change_df[['muni_id', 'absolute_change']].to_csv("./map_layers/absolute_change.csv", index = False)
+    change_df[['muni_id', 'absolute_change']].to_csv(f"./map_layers/{current_user.name}_absolute_change.csv", index = False)
     # change_df['perc_change'] = (change_df['migrants'] - change_df['migrants_og']) / change_df['sum_num_intmig_og']
     # change_df = change_df.replace([np.inf, -np.inf], np.nan)
     # change_df = change_df.fillna(0)
@@ -292,9 +293,11 @@ def predict_migration():
     with open('status.json', 'w') as outfile:
         json.dump({'status': "Status - Rendering new migration map..."}, outfile)
 
+    print(current_user.name)
+
     return jsonify(features)
 
 app = create_app() # we initialize our flask app using the __init__.py function
 if __name__ == '__main__':
     db.create_all(app=create_app()) # create the SQLite database
-    app.run(debug=True) # run the flask app on debug mode
+    app.run(debug = True) # run the flask app on debug mode
