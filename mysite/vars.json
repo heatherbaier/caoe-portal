@@ -1,0 +1,74 @@
+{
+  "Deomographic": [
+    "INDIG",
+    "MARST",
+    "AGE"
+  ],
+  "Family": [
+    "CHBORN",
+    "CHSURV",
+    "LASTBMO",
+    "LASTBYR",
+    "LASTBMORT"
+  ],
+  "Employment": [
+    "EMPSTAT",
+    "LABFORCE",
+    "OCCISCO",
+    "INDGEN",
+    "CLASSWK"
+  ],
+  "Education": [
+    "SCHOOL",
+    "LIT",
+    "EDATTAIN",
+    "YRSCHOOL"
+  ],
+  "Household": [
+    "URBAN",
+    "GQ",
+    "UNREL",
+    "ELECTRONIC",
+    "WATSUP",
+    "SEWAGE",
+    "FUELCOOK",
+    "TRASH",
+    "ROOMS",
+    "BEDROOMS",
+    "KITCHEN",
+    "TOILET",
+    "FLOOR",
+    "HHTYPE",
+    "NFAMS",
+    "NCOUPLES",
+    "NMOTHERS",
+    "NFATHERS",
+    "NCHILD",
+    "NCHLT5",
+    "FAMSIZE",
+    "OWNERSHIP",
+    "ELDCH",
+    "YNGCH"
+  ],
+  "Crime": [
+    "abduction_forced_disappearance",
+    "agreement",
+    "air_drone_strike",
+    "armed_clash",
+    "arrests",
+    "attack",
+    "change_to_group_activity",
+    "disrupted_weapons_use",
+    "excessive_force_against_protesters",
+    "grenade",
+    "headquarters_or_base_established",
+    "looting_property_destruction",
+    "mob_violence",
+    "other",
+    "peaceful_protest",
+    "protest_with_intervention",
+    "remote_explosive_landmine_ied",
+    "sexual_violence",
+    "violent_demonstration"
+  ]
+}

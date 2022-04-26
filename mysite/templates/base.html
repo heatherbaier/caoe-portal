@@ -2,15 +2,53 @@
 <html>
 
 <head>
-    <meta charset="utf-8">
+    <!-- <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1"> -->
     <title>Flask Auth Example</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css" />
+
+
+	<title>Migration Data Portal</title>
+
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+		integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link href='https://fonts.googleapis.com/css?family=Roboto' rel='stylesheet'>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.min.js"></script>
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+		integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+		crossorigin="" />
+	<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+		integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+		crossorigin=""></script>
+	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" />
+	<script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"></script>
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.css" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.4.2/leaflet.draw.js"></script>
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/0.5.7/chartjs-plugin-annotation.min.js"></script>
+
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/styles2.css') }}">
+	<script src="{{url_for('static', filename='js/predict-migration.js')}}"></script>
+	<script src="{{url_for('static', filename='js/corr-table.js')}}"></script>
+	<script src="{{url_for('static', filename='js/change-map-var.js')}}"></script>
+	<!-- <script src="{{url_for('static', filename='js/border-sector-breakout.js')}}"></script> -->
+	<script src="{{url_for('static', filename='js/update-top-ten.js')}}"></script>
+
+	<script src="https://d3js.org/d3.v4.js"></script>
+	<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+
+
+
 </head>
 
 <body>
-<section class="hero is-fullheight" style="background-color:#C4FCEF;">
+<section class="hero is-fullheight" style="background-color:#EFEFF6;">
 
     <div class="hero-head">
         <nav class="navbar">
@@ -46,9 +84,9 @@
     </div>
 
     <div class="hero-body">
-        <div class="container has-text-centered">
+        <!-- <div class="container has-text-centered"> -->
             {% block content %}{% endblock %}
-        </div>
+        <!-- </div> -->
     </div>
 </section>
 </body>

@@ -1,0 +1,482 @@
+html, body {
+    margin: 0;
+    height: 100%;
+}
+
+
+* {
+    box-sizing: border-box;
+  }
+  
+  /* Create three equal columns that floats next to each other */
+  .column {
+    float: left;
+    /* width: 33.33%; */
+    padding: 10px;
+    /* height: 300px; Should be removed. Only for demonstration */
+  }
+
+
+  .row {
+    height: 100%;
+
+  }
+
+  #nav {
+    width: 30%;
+    overflow-y: auto;
+    max-height: 1400px;
+   }
+   
+   #data {
+    width: 70%;
+    /* height: 90% */
+   }
+   
+   
+   /* #drill {
+    width: 25%;
+   } */
+   
+  
+  /* Clear floats after the columns */
+  .row:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+
+  #pchange_icon1, #pchange_icon2 {
+    box-shadow: 0 0 0 0 white;
+  }
+
+  #grid-container {
+    grid-template-columns: auto auto;
+  }
+
+  .grid-container {
+      margin: 0;
+    display: grid;
+    grid-gap: 10px;
+    text-align: center;
+    /* background-color: #2196F3; */
+    padding: 10px;
+    /* box-shadow: 0 0 10px 5px lightgray; */
+    height: 80%;
+  }
+  
+  .grid-item {
+    background-color: white;
+    /* padding: 20px; */
+    /* font-size: 15px; */
+    text-align: center;
+    height: 150px;
+    box-shadow: 0 0 10px 5px lightgray;
+    position: relative;
+    /* height: 100%; */
+  }
+
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: Roboto;
+    margin: 5px;
+}
+
+h4 {
+    font-size: 15px;
+    font-weight: normal;
+}
+
+h1 {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+
+h2 {
+    font-size: 22px;
+    /* display: ; */
+    /* font-we */
+}
+
+h3 {
+    font-size: 38px;
+}
+
+h5 {
+    font-size: 18px;
+    font-weight: normal;
+}
+
+h6 {
+    font-size: 15px;
+}
+
+.top-stat {
+    padding-top: 18px;
+    font-weight: bold;
+}
+
+#time-slider-d {
+    width: 40%;
+    /* height: auto; */
+    margin: 0 auto;
+    padding-top: 10px;
+    position: relative;
+    border-radius: 8px;
+}
+
+#time-slider {
+    background-color: #dce4ea;
+    width: 50%;
+    border-radius: 10px;
+    margin: 0 auto;
+    text-align:left;
+}
+
+.ts-i {
+    text-align: center;
+    float: left;
+    position: relative;
+    width: 26.67%; 
+    margin-left: 5% ;
+    /* margin: 0 auto; */
+}
+
+.material-icons.chev.ts-i {
+    font-size: 10px;
+    text-align: center;
+    float: left;
+    position: relative;
+    width: 26.67%; 
+    /* margin-left: 5% ; */
+    color: #74b4ef;
+    background-color: #dce4ea;
+    box-shadow: 0 0 0 0 #dce4ea;
+    padding: 0px;
+    margin: 0 auto;
+    /* margin: 0px; */
+    /* margin: 0 auto; */
+}
+
+
+.material-icons.chev.ts-i:hover {
+    color: white;
+    cursor: hand;
+}
+
+
+
+.nav-link {
+    color: white;
+    width: 80%;
+    margin: 15px;
+    /* box-shadow: 0 0 10px 5px lightgray; */
+}
+
+.material-icons.link {
+    padding: 8px;
+    font-size: 10px;
+    /* background-color: white; */
+}
+
+
+.material-icons.info {
+    padding: 0px;
+    margin: 0px;
+    box-shadow: 0 0 0 0 white;
+    color: lightgray;
+    font-size: 10px;
+}
+
+#nav-title {
+    padding-top: 20px;
+    margin: 20px;
+    color: lightgray;
+    font-size: 27px;
+}
+
+
+
+
+/* Style the sidenav links and the dropdown button */
+.sidenav a, .dropdown-btn {
+    padding: 6px 8px 15px 16px;
+    text-decoration: none;
+    font-size: 15px;
+    color: black;
+    display: block;
+    border: none;
+    background: none;
+    width: 90%;
+    text-align: left;
+    cursor: pointer;
+    outline: none;
+    margin-left: 20px;
+    /* margin-right: 20px; */
+    /* padding-right: 50px; */
+    font-family: Roboto;
+}
+
+
+/* Dropdown container (hidden by default). Optional: add a lighter background color and some left padding to change the design of the dropdown content */
+.dropdown-container {
+    display: none;
+    background-color: white;
+    padding-top: 15px;
+    padding-left: 15px;
+    margin-left:60px;
+    margin-right:20px;
+    margin-top:20px;
+    /* margin-bottom:20px; */
+    border-radius: 10px;
+    /* border-bottom-right-radius: 4px; */
+    /* padding: 20px; */
+    font-family: Roboto;
+    font-size: 14px;
+    /* box-shadow: 10px 5px 5px lightgray; */
+    max-height: 800px;
+    overflow-y: auto;
+    margin-bottom: 50px;
+}
+
+/* Optional: Style the caret down icon */
+.fa-caret-down {
+    float: right;
+    padding-right: 8px;
+    padding-left: 10px;
+}
+
+.munic-options {
+    font-size: 20px;
+    margin-left: 40px;
+}
+
+
+canvas { 
+    max-width: 800px; 
+}
+
+#mapid { 
+    /* position: absolute; */
+    /* height: 50%; */
+    width: 136vh;
+    height: 65vh; 
+    background-color: #d4dadc;
+}
+
+.legend {
+    /* line-height: 18px; */
+    color: white;
+    font-size: 15px;
+    line-height: 18px;
+}
+
+.legend i {
+    width: 10px;
+    height: 10px;
+    float: left;
+    /* margin-left: 20px;
+    margin-bottom: 20px; */
+    margin-right: 15px;
+    opacity: 0.7;
+}
+
+
+.map-wrapper {
+    position: relative;
+}
+  
+
+.material-icons {
+    padding: 10px;
+    color: #404040;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 10px 5px 5px lightgray;
+    font-size: 15px;
+}
+
+.g-icon {
+    box-shadow: 10px 5px 5px lightgray;
+}
+
+input[type=number] {
+
+    border-radius: 20px;
+    text-align: center;
+    outline: none;
+    width: 50px;
+    height: 20px;
+    font-family: Roboto;
+    font-size: 10px;
+
+}
+
+
+#pb-div {
+    width: 100%;
+    text-align: center;
+}
+
+.predict-button {
+    background-color: #dbe4e9;
+    color: black;
+    height: 50px;
+    width: 300px;
+    font-size: 15px;
+    border-radius: 10px;
+    font-family: Roboto; 
+    box-shadow: 10px 5px 5px lightgray;
+    /* margin: 0 auto;
+    position: relative; */
+    text-align: center;
+    /* font-weight: bold; */
+    cursor: pointer;
+    border-color: #dbe4e9;
+    /* padding-top: 20px; */
+}
+
+
+.so-button {
+    background-color: #dbe4e9;
+    color: black;
+    height: 40px;
+    width: 120px;
+    font-size: 15px;
+    /* border-radius: 10px; */
+    font-family: Roboto; 
+    /* box-shadow: 10px 5px 5px lightgray; */
+    /* margin: 0 auto;
+    position: relative; */
+    text-align: center;
+    /* font-weight: bold; */
+    cursor: pointer;
+    /* border-color: #dbe4e9; */
+    /* padding-top: 20px; */
+    /* margin-top: -20px */
+}
+
+/* On mouse-over */
+.predict-button:hover {
+    background-color: white;
+    /* border-color: #0E0C28; */
+    color: #0E0C28;
+}
+
+
+
+.box {
+    /* width: 100%;
+    height: 100%;             */
+    /* position: absolute; */
+    z-index: 1;
+    /* top: 0;
+    left: 0;
+    opacity: 0.8;  for demo purpose  */
+}
+
+
+label {
+    font-size: 15px;
+}
+
+
+
+.stack-top {
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 15px;
+    color: black;
+    background-color: #bebebe;
+    /* width: 100%; */
+    /* height: 100%;             */
+    margin-top: 2%;
+    margin-left: 50%;
+    position: absolute;
+    /* top: 10; */
+    /* right: 10; */
+    opacity: 0.8;  /* for demo purpose  */
+    /* width: 20px; */
+    /* float: right; */
+    z-index: 9;
+    /* margin: 20px; for demo purpose  */
+    /* margin-right: 0%; */
+    /* text-align: right; */
+    width: 275px;
+}
+
+
+input[type=radio] {
+
+    /* padding: 5px; */
+
+    /* border-radius: 20px;
+    text-align: center;
+    outline: none;
+    width: 80px;
+    height: 30px;
+    font-family: Roboto;
+    font-size: 22px; */
+
+}
+
+
+
+/* Popup container - can be anything you want */
+.popup {
+    position: relative;
+    display: inline-block;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+  
+  /* The actual popup */
+  .popup .popuptext {
+    visibility: hidden;
+    width: 350px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 10px;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -80px;
+    font-size: 22px;
+  }
+  
+  /* Popup arrow */
+  .popup .popuptext::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+  }
+  
+  /* Toggle this class - hide and show the popup */
+  .popup .show {
+    visibility: visible;
+    -webkit-animation: fadeIn 1s;
+    animation: fadeIn 1s;
+  }
+  
+  /* Add animation (fade in the popup) */
+  @-webkit-keyframes fadeIn {
+    from {opacity: 0;} 
+    to {opacity: 1;}
+  }
+  
+  @keyframes fadeIn {
+    from {opacity: 0;}
+    to {opacity:1 ;}
+  }
